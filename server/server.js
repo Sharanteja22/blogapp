@@ -16,6 +16,8 @@ mongoose.connect(process.env.DB_URL)
     console.log("error in database  connection: ",err);
 })
 
+app.use(exp.json())
+
 
 app.use('/user-api',require('./APIs/userApi'))
 app.use('/author-api',require('./APIs/authorApi'))
