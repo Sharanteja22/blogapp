@@ -1,10 +1,11 @@
 const exp=require('express')
 const app=exp()
 const mongoose=require('mongoose')
-
+const cors=require('cors')
 require('dotenv').config()
 const port=process.env.PORT || 4000
 
+app.use(cors())
 mongoose.connect(process.env.DB_URL)
 .then(()=>{
     app.listen(port,()=>{
