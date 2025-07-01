@@ -1,0 +1,14 @@
+.header{
+    margin-bottom:3px;
+    background-image: linear-gradient(to right,rgb(125, 125, 190), rgb(107, 164, 173));
+}
+
+.header a{
+    text-decoration: none;
+    color:var(--black)
+}
+
+.header a:hover{
+    text-decoration: none;
+    color:rgb(42, 83, 1)
+}
