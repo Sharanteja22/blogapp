@@ -1,6 +1,6 @@
 const User = require("../models/userModel");
 
-async function createUser(req,res,next){
+async function createUser(req,res){
     const newUser=req.body;
     //check if already someone exists with email
     const userdb=await  User.findOne({email:newUser.email});
