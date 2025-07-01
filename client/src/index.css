@@ -19,3 +19,6 @@
 body{
   background-color: var(--white-smoke);
 }
+html, body, #root {
+  height: 100%;
+}

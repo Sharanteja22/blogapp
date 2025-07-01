@@ -5,14 +5,13 @@ import './index.css'
 import {createBrowserRouter,Navigate,RouterProvider} from 'react-router-dom'
 import RootLayout from './components/RootLayout.jsx'
 import Home from './components/common/Home.jsx'
-import SignIn from './components/common/SignIn.jsx'
-import SignUp from './components/common/SignUp.jsx'
 import UserProfile from './components/user/UserProfile.jsx'
 import AuthorProfile from './components/author/AuthorProfile.jsx'
 import Articles from './components/common/Articles.jsx'
 import ArticleByID from './components/common/ArticleByID.jsx'
 import PostArticle from './components/author/PostArticle.jsx'
-
+import Login from './components/common/Login.jsx';
+import Register from './components/common/Register.jsx';
 
 const browserRouterObj=createBrowserRouter([
   {
@@ -24,10 +23,10 @@ const browserRouterObj=createBrowserRouter([
         element:<Home/>
       },{
         path:'signin',
-        element:<SignIn/>
+        element:<Login/>
       },{
         path:'signup',
-        element:<SignUp/>
+        element:<Register/>
       },{
         path:'user-profile/:email',
         element:<UserProfile/>,
