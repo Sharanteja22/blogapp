@@ -146,6 +146,7 @@ function Home() {
       if (message === role) {
         setCurrentUser(prev => ({ ...prev, ...payload }));
         setError("");
+        navigate(`/${payload.role}-profile/${payload.email}`);
       } else {
         setError(message);
       }

@@ -19,9 +19,9 @@ function RootLayout() {
         <Header />
         <div  style={{
             flex: 1,
-            display: 'flex',          
-            justifyContent: 'center', 
-            alignItems: 'center'  
+            //display: 'flex',          
+            //justifyContent: 'center', 
+            //alignItems: 'center'  
           }}>
           <Outlet />
         </div>
