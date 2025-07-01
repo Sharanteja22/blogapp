@@ -27,4 +27,14 @@ authorApp.get("/articles",expressAsyncHandler(async(req,res)=>{
     res.status(200).send({message:"all articles",payload:allArticles});
 }))
 
+//edit an article
+authorApp.put("/article/:articleId",expressAsyncHandler(async(req,res)=>{
+    const articleId=req.params.articleId;
+    console.log(articleId);
+    const updatedArticleObj=req.body; 
+    console.log(updatedArticleObj)
+    const updatedArticle=await Article.findOneAndUpdate({articleId},{...updatedArticleObj},{new:true});
+    res.status(200).send({message:"article updated",payload:updatedArticle});
+}))
+
 module.exports=authorApp;
