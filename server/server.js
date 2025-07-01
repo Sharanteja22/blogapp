@@ -23,3 +23,9 @@ app.use(exp.json())
 app.use('/user-api',require('./APIs/userApi'))
 app.use('/author-api',require('./APIs/authorApi'))
 app.use('/admin-api',require('./APIs/adminApi'))
+
+
+//error handler
+app.use((err,req,res,next)=>{
+    res.status(500).send({message:err.message})
+})
