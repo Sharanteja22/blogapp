@@ -4,8 +4,8 @@ const expressAsyncHandler=require('express-async-handler')
 const User=require('../models/userModel')
 const createUser=require('../middlewares/createUser')
 const Article = require('../models/articleModel')
-
-
+const {requireAuth}=require("@clerk/express")
+require('dotenv').config()
 //create a new author
 authorApp.post("/user",expressAsyncHandler(createUser))
 
@@ -22,10 +22,14 @@ authorApp.post("/article",expressAsyncHandler(async(req,res)=>{
 
 //read all articles
 
-authorApp.get("/articles",expressAsyncHandler(async(req,res)=>{
+authorApp.get("/articles",requireAuth({signInUrl:'unauthorized'}),expressAsyncHandler(async(req,res)=>{
     const allArticles=await Article.find({isArticleActive:true});
     res.status(200).send({message:"articles",payload:allArticles});
 }))
+
+authorApp.get('/unauthorized',(req,res)=>{
+    res.status(401).send({message:"unauthorized please Login"});
+})
 
 //edit an article
 authorApp.put("/article/:articleId",expressAsyncHandler(async(req,res)=>{

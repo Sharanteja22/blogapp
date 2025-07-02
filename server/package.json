@@ -9,6 +9,7 @@
   "author": "sharan teja",
   "license": "ISC",
   "dependencies": {
+    "@clerk/express": "^1.7.3",
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
