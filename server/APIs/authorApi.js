@@ -24,7 +24,7 @@ authorApp.post("/article",expressAsyncHandler(async(req,res)=>{
 
 authorApp.get("/articles",expressAsyncHandler(async(req,res)=>{
     const allArticles=await Article.find({isArticleActive:true});
-    res.status(200).send({message:"all articles",payload:allArticles});
+    res.status(200).send({message:"articles",payload:allArticles});
 }))
 
 //edit an article
