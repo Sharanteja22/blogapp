@@ -1,21 +1,33 @@
 import React,{useEffect, useState} from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {useAuth} from "@clerk/clerk-react";
+
 function Articles() {
     const [articles,setArticles]=useState([]);
     const [error,setError]=useState('');  
     const navigate = useNavigate();
+    const {getToken}=useAuth();
     function gotoArticleById(articleObj){
      navigate(`../${articleObj.articleId}`,{state:{articleObj}});
     }
 
     async function  getArticles(){
-      let res=await axios.get('http://localhost:3000/author-api/articles');
-      if(res.data.message=="articles"){
-        setArticles(res.data.payload);
-        setError('');
-      }else{
-        setError(res.data.message);
+      try{
+        const token=await getToken();  
+        let res=await axios.get('http://localhost:3000/author-api/articles',{
+          headers:{
+            Authorization:`Bearer ${token}` 
+          }
+        });
+        if(res.data.message=="articles"){
+          setArticles(res.data.payload);
+          setError('');
+        }else{
+          setError(res.message);
+        }
+      }catch(err){
+        setError(err.message);
       }
     }
     useEffect(()=>{
@@ -49,6 +61,9 @@ function Articles() {
             )
           }
         </div>
+        {
+          error && <div className='text-center text-danger'>{error}</div>
+        }
       </div>
     </div>
   )
