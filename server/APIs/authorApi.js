@@ -32,23 +32,23 @@ authorApp.get('/unauthorized',(req,res)=>{
 })
 
 //edit an article
-authorApp.put("/article/:articleId",expressAsyncHandler(async(req,res)=>{
+authorApp.put("/article/:articleId",requireAuth({signInUrl:'unauthorized'}),expressAsyncHandler(async(req,res)=>{
     const articleId=req.params.articleId;
-    console.log(articleId);
     const updatedArticleObj=req.body; 
-    console.log(updatedArticleObj)
     const updatedArticle=await Article.findOneAndUpdate({articleId},{...updatedArticleObj},{new:true});
     res.status(200).send({message:"article updated",payload:updatedArticle});
 }))
 
-
-authorApp.put("/articleDelete/:articleId",expressAsyncHandler(async(req,res)=>{
+//soft delete and restore
+authorApp.put("/articleDelete/:articleId",requireAuth({signInUrl:'unauthorized'}),expressAsyncHandler(async(req,res)=>{
     const articleId=req.params.articleId;
-    console.log(articleId);
-    const updatedArticleObj=req.body; 
-    console.log(updatedArticleObj)
+    const updatedArticleObj=req.body;
     const updatedArticle=await Article.findOneAndUpdate({articleId},{...updatedArticleObj},{new:true});
-    res.status(200).send({message:"article deleted",payload:updatedArticle});
+    if(updatedArticle.isArticleActive===true){
+        res.status(200).send({message:"article restored",payload:updatedArticle});
+    }else{
+        res.status(200).send({message:"article deleted",payload:updatedArticle});
+    }
 }))
 
 module.exports=authorApp;

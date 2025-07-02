@@ -1,143 +1,3 @@
-// import React, { useState } from 'react'
-// import {useLocation} from 'react-router-dom'
-// import { FaRegEdit } from "react-icons/fa";
-// import { RiDeleteBin6Fill } from "react-icons/ri";
-// import { userContextObj } from '../../contexts/userContext';
-// import { useContext } from 'react';
-// import { MdRestorePage } from "react-icons/md";
-
-// function ArticleByID() {
-//   const {currentUser}=useContext(userContextObj);
-//   // console.log(currentUser)
-//   const {state}=useLocation();
-//   const [editStatus,setEditStatus]=useState(false);
-
-//   function enableEdit(){
-//     setEditStatus(true);
-//   }
-//   // console.log(state)
-//   return (
-//     <div className='w-100 container my-2' >
-//       {
-//         !editStatus?
-//           <div className="d-flex flex-column justify-content-between">
-//             <div className="mb-3 w-100 px-4 py-2 rounded-4 bg-secondary d-flex justify-content-between align-items-center">
-//               <div className="d-flex flex-row gap-3 ">
-//                 <p className="display-6 text-white">{state.articleObj.title}</p>
-//                 <div>
-//                   {
-//                     currentUser.firstName==state.articleObj.authorData.nameOfAuthor &&  <div>
-//                         <button className="btn btn-lg text-warning" onClick={enableEdit}><FaRegEdit /></button>
-//                         {
-//                           state.articleObj.isArticleActive ?
-//                           <button className="btn btn-lg text-warning"><RiDeleteBin6Fill /></button>
-//                           :
-//                           <button className="btn btn-lg text-success"><MdRestorePage /></button>
-//                         }
-//                       </div>
-//                   }
-//                 </div>
-//               </div>
-//               <div className='d-flex flex-column gap-1'>
-//                 <img src={state.articleObj.authorData.profileImageUrl} alt="" className='rounded-circle w-100 mx-auto' style={{maxWidth:"40px",height:"40px"}} />
-//                 <p className='text-white'><span className='text-warning'>Author: </span>{state.articleObj.authorData.nameOfAuthor}</p>
-//               </div>
-//             </div>
-//             <div className='container w-100 px-4 py-4 rounded-4 bg-secondary' >
-//               <p className=''>{state.articleObj.content}</p>
-//             </div>
-//             <div className='w-100 container my-2 rounded-4 bg-secondary'>
-//               {
-//                 state.articleObj.comments.length==0? <p className='text-center  p-3'>No comments yet</p>:
-//                   state.articleObj.comments.map((commentObj)=>{
-//                     return <div key={commentObj._id} >
-//                       {console.log(commentObj)}
-//                         <p>{commentObj?.nameOfUser}</p> 
-//                         <p>{commentObj.comment}</p>
-//                       </div>
-//                   })
-//                 }
-//             </div>
-//           </div>
-//         :
-//         <div className='w-100 container my-2 rounded-4 bg-secondary'>
-//            <form className="article-form" >
-//             <div className="form-grid">
-//               {/* Left Column - Title and Category */}
-//               <div className="left-column">
-//                 <div className="form-group">
-//                   <label htmlFor="title" className="form-label">
-//                     <span className="label-text">Title</span>
-//                     <span className="label-required">*</span>
-//                   </label>
-//                   <input
-//                     type="text"
-//                     className={`form-input ${errors.title ? "error" : ""}`}
-//                     id="title"
-//                     placeholder="Enter your article title..."
-//                     {...register("title", { required: "Title is required" })}
-//                   />
-//                   {errors.title && <p className="error-message">{errors.title.message}</p>}
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="category" className="form-label">
-//                     <span className="label-text">Category</span>
-//                     <span className="label-required">*</span>
-//                   </label>
-//                   <input
-//                     type="text"
-//                     className={`form-input ${errors.category ? "error" : ""}`}
-//                     id="category"
-//                     placeholder="e.g. Technology, Health, Lifestyle..."
-//                     {...register("category", { required: "Category is required" })}
-//                   />
-//                   {errors.category && <p className="error-message">{errors.category.message}</p>}
-//                 </div>
-
-//                 {/* Button for desktop - hidden on mobile */}
-//                 <button className="submit-btn desktop-btn" type="submit">
-//                   <span className="btn-text">Publish Article</span>
-//                   <span className="btn-icon">📝</span>
-//                 </button>
-//               </div>
-
-//               {/* Right Column - Content */}
-//               <div className="right-column">
-//                 <div className="form-group">
-//                   <label htmlFor="content" className="form-label">
-//                     <span className="label-text">Content</span>
-//                     <span className="label-required">*</span>
-//                   </label>
-//                   <textarea
-//                     className={`form-textarea ${errors.content ? "error" : ""}`}
-//                     id="content"
-//                     rows="8"
-//                     placeholder="Write your article content here..."
-//                     {...register("content", { required: "Content is required" })}
-//                   ></textarea>
-//                   {/* {errors.content && <p className="error-message">{errors.content.message}</p>} */}
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* Button for mobile - hidden on desktop */}
-//             <button className="submit-btn mobile-btn" type="submit">
-//               <span className="btn-text">Publish Article</span>
-//               <span className="btn-icon">📝</span>
-//             </button>
-//           </form>
-//         </div>
-//       }
-//     </div>
-//   )
-// }
-
-// export default ArticleByID
-
-
-
-
 import React, { useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FaRegEdit } from "react-icons/fa";
@@ -146,13 +6,45 @@ import { MdRestorePage } from "react-icons/md";
 import { userContextObj } from '../../contexts/userContext';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
+import {useAuth} from '@clerk/clerk-react'
 function ArticleByID() {
   const { currentUser } = useContext(userContextObj);
   const { state } = useLocation();
   const [editStatus, setEditStatus] = useState(false);
-
+  const navigate=useNavigate();
   const { title, category, content } = state.articleObj;
+  const {getToken}=useAuth();
+
+  async function deleteArticle(){
+    const token=await getToken();
+    state.articleObj.isArticleActive=false;
+    let res=await axios.put(`http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,state.articleObj,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    });
+    if(res.data.message=="article deleted"){
+      navigate(`/author-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
+    }else{
+      alert("❌ Failed to delete article");
+    }
+  }
+
+  async function restoreArticle(){
+    const token=await getToken();
+    state.articleObj.isArticleActive=true;
+    let res=await axios.put(`http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,state.articleObj,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    });
+    if(res.data.message=="article restored"){
+      navigate(`/author-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
+    }else{
+      alert("❌ Failed to restore article");
+    }
+  }
 
   const {
     register,
@@ -177,15 +69,25 @@ function ArticleByID() {
   }
 
   async function onSubmit(updatedData) {
+    const modifiedData = {...state.articleObj,...updatedData};  
+    const currentDate=new Date();
+    const token=await getToken();
+    modifiedData.dateOfModification=currentDate.getDate()+"-"+currentDate.getMonth()+"-"+currentDate.getFullYear()+currentDate.toLocaleTimeString("en-US", { hour12: true });
+    
     try {
       const res = await axios.put(
         `http://localhost:3000/author-api/article/${state.articleObj.articleId}`,
-        updatedData
+        modifiedData,{
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        }
       );
       console.log(res)
       if (res.data.message === "article updated") {
         alert("✅ Article updated successfully");
         setEditStatus(false);
+        navigate(`/author-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
       } else {
         alert("❌ Failed to update article");
       }
@@ -202,7 +104,7 @@ function ArticleByID() {
           {/* Article Display View */}
           <div className="mb-3 w-100 px-4 py-2 rounded-4 bg-secondary d-flex justify-content-between align-items-center">
             <div className="d-flex flex-row gap-3 ">
-              <p className="display-6 text-white">{state.articleObj.title}</p>
+              <p className="display-6 text-white">{title}</p>
               {
                 currentUser.firstName === state.articleObj.authorData.nameOfAuthor &&
                 <div>
@@ -211,9 +113,9 @@ function ArticleByID() {
                   </button>
                   {
                     state.articleObj.isArticleActive ? (
-                      <button className="btn btn-lg text-warning"><RiDeleteBin6Fill /></button>
+                      <button className="btn btn-lg text-warning" onClick={deleteArticle}><RiDeleteBin6Fill /></button>
                     ) : (
-                      <button className="btn btn-lg text-success"><MdRestorePage /></button>
+                      <button className="btn btn-lg text-warning" onClick={restoreArticle}><MdRestorePage /></button>
                     )
                   }
                 </div>
@@ -228,7 +130,7 @@ function ArticleByID() {
           </div>
 
           <div className='container w-100 px-4 py-4 rounded-4 bg-secondary'>
-            <p>{state.articleObj.content}</p>
+            <p>{content}</p>
           </div>
 
           <div className='w-100 container my-2 rounded-4 bg-secondary'>
