@@ -31,6 +31,28 @@ function ArticleByID() {
     }
   }
 
+
+  async function addComment(e){
+    const token=await getToken();
+    e.preventDefault();
+    const commentObj ={comment:e.target.comment.value}
+    if (commentObj.comment.trim() === "") return;
+    e.target.reset();
+    commentObj.nameOfUser=currentUser.firstName;
+    console.log(commentObj)
+    let res=await axios.put(`http://localhost:3000/user-api/comment/${state.articleObj.articleId}`,commentObj,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    });
+    if(res.data.message=="comment added"){
+      alert("✅ Comment added successfully");
+      navigate(`/user-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
+    }else{
+      alert("❌ Failed to add comment");
+    }
+  }
+
   async function restoreArticle(){
     const token=await getToken();
     state.articleObj.isArticleActive=true;
@@ -145,7 +167,22 @@ function ArticleByID() {
                 ))
             }
           </div>
-        </div>
+          {
+            currentUser.role=='user' && 
+              <div>
+                <form onSubmit={addComment}>
+                  <input
+                    type="text"
+                    className={`form-control m-2`}
+                    id="comment"
+                    name='comment'
+                    
+                  />
+                  <button className="btn btn-success m-2 " type='submit'>Add Comment</button>
+                </form>
+              </div>
+          }
+        </div>        
       ) : (
         <div className='w-100 container my-2 rounded-4 bg-secondary'>
           {/* Article Edit Form */}
