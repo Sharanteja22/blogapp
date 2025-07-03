@@ -1,70 +1,115 @@
-import React, { useState, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Fill } from "react-icons/ri";
-import { MdRestorePage } from "react-icons/md";
-import { userContextObj } from '../../contexts/userContext';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import {useAuth} from '@clerk/clerk-react'
+import { useState, useContext } from "react"
+import { useLocation } from "react-router-dom"
+import { FaRegEdit } from "react-icons/fa"
+import { RiDeleteBin6Fill } from "react-icons/ri"
+import { MdRestorePage } from "react-icons/md"
+import { userContextObj } from "../../contexts/userContext"
+import { useForm } from "react-hook-form"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "@clerk/clerk-react"
+import "../styles/ArticleByID.css"
+
 function ArticleByID() {
-  const { currentUser } = useContext(userContextObj);
-  const { state } = useLocation();
-  const [editStatus, setEditStatus] = useState(false);
-  const navigate=useNavigate();
-  const { title, category, content } = state.articleObj;
-  const {getToken}=useAuth();
+  const { currentUser } = useContext(userContextObj)
+  const { state } = useLocation()
+  const [editStatus, setEditStatus] = useState(false)
+  const [notification, setNotification] = useState(null)
+  const navigate = useNavigate()
+  const { title, category, content } = state.articleObj
+  const { getToken } = useAuth()
 
-  async function deleteArticle(){
-    const token=await getToken();
-    state.articleObj.isArticleActive=false;
-    let res=await axios.put(`http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,state.articleObj,{
-      headers:{
-        Authorization:`Bearer ${token}`
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type })
+    setTimeout(() => setNotification(null), 4000)
+  }
+
+  async function deleteArticle() {
+    try {
+      const token = await getToken()
+      state.articleObj.isArticleActive = false
+
+      const res = await axios.put(
+        `http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,
+        state.articleObj,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+
+      if (res.data.message === "article deleted") {
+        showNotification("Article deleted successfully", "success")
+        navigate(`/author-profile/articles/${state.articleObj.articleId}`, {
+          state: { articleObj: res.data.payload },
+        })
+      } else {
+        showNotification("Failed to delete article", "error")
       }
-    });
-    if(res.data.message=="article deleted"){
-      navigate(`/author-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
-    }else{
-      alert("❌ Failed to delete article");
+    } catch (err) {
+      showNotification("Error deleting article", "error")
     }
   }
 
+  async function addComment(e) {
+    try {
+      const token = await getToken()
+      e.preventDefault()
+      const commentObj = { comment: e.target.comment.value }
 
-  async function addComment(e){
-    const token=await getToken();
-    e.preventDefault();
-    const commentObj ={comment:e.target.comment.value}
-    if (commentObj.comment.trim() === "") return;
-    e.target.reset();
-    commentObj.nameOfUser=currentUser.firstName;
-    console.log(commentObj)
-    let res=await axios.put(`http://localhost:3000/user-api/comment/${state.articleObj.articleId}`,commentObj,{
-      headers:{
-        Authorization:`Bearer ${token}`
+      if (commentObj.comment.trim() === "") {
+        showNotification("Please enter a comment", "error")
+        return
       }
-    });
-    if(res.data.message=="comment added"){
-      alert("✅ Comment added successfully");
-      navigate(`/user-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
-    }else{
-      alert("❌ Failed to add comment");
+
+      e.target.reset()
+      commentObj.nameOfUser = currentUser.firstName
+
+      const res = await axios.put(`http://localhost:3000/user-api/comment/${state.articleObj.articleId}`, commentObj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (res.data.message === "comment added") {
+        showNotification("Comment added successfully", "success")
+        navigate(`/user-profile/articles/${state.articleObj.articleId}`, {
+          state: { articleObj: res.data.payload },
+        })
+      } else {
+        showNotification("Failed to add comment", "error")
+      }
+    } catch (err) {
+      showNotification("Error adding comment", "error")
     }
   }
 
-  async function restoreArticle(){
-    const token=await getToken();
-    state.articleObj.isArticleActive=true;
-    let res=await axios.put(`http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,state.articleObj,{
-      headers:{
-        Authorization:`Bearer ${token}`
+  async function restoreArticle() {
+    try {
+      const token = await getToken()
+      state.articleObj.isArticleActive = true
+
+      const res = await axios.put(
+        `http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,
+        state.articleObj,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+
+      if (res.data.message === "article restored") {
+        showNotification("Article restored successfully", "success")
+        navigate(`/author-profile/articles/${state.articleObj.articleId}`, {
+          state: { articleObj: res.data.payload },
+        })
+      } else {
+        showNotification("Failed to restore article", "error")
       }
-    });
-    if(res.data.message=="article restored"){
-      navigate(`/author-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
-    }else{
-      alert("❌ Failed to restore article");
+    } catch (err) {
+      showNotification("Error restoring article", "error")
     }
   }
 
@@ -78,165 +123,197 @@ function ArticleByID() {
       title,
       category,
       content,
-    }
-  });
+    },
+  })
 
   function enableEdit() {
-    setEditStatus(true);
+    setEditStatus(true)
     reset({
       title: state.articleObj.title,
       category: state.articleObj.category,
       content: state.articleObj.content,
-    });
+    })
   }
 
   async function onSubmit(updatedData) {
-    const modifiedData = {...state.articleObj,...updatedData};  
-    const currentDate=new Date();
-    const token=await getToken();
-    modifiedData.dateOfModification=currentDate.getDate()+"-"+currentDate.getMonth()+"-"+currentDate.getFullYear()+currentDate.toLocaleTimeString("en-US", { hour12: true });
-    
     try {
+      const modifiedData = { ...state.articleObj, ...updatedData }
+      const currentDate = new Date()
+      const token = await getToken()
+
+      modifiedData.dateOfModification =
+        currentDate.getDate() +
+        "-" +
+        (currentDate.getMonth() + 1) +
+        "-" +
+        currentDate.getFullYear() +
+        " " +
+        currentDate.toLocaleTimeString("en-US", { hour12: true })
+
       const res = await axios.put(
         `http://localhost:3000/author-api/article/${state.articleObj.articleId}`,
-        modifiedData,{
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        }
-      );
-      console.log(res)
+        modifiedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+
       if (res.data.message === "article updated") {
-        alert("✅ Article updated successfully");
-        setEditStatus(false);
-        navigate(`/author-profile/articles/${state.articleObj.articleId}`,{state:{articleObj:res.data.payload}});
+        showNotification("Article updated successfully", "success")
+        setEditStatus(false)
+        navigate(`/author-profile/articles/${state.articleObj.articleId}`, {
+          state: { articleObj: res.data.payload },
+        })
       } else {
-        alert("❌ Failed to update article");
+        showNotification("Failed to update article", "error")
       }
     } catch (err) {
-      console.error("Update error:", err);
-      alert("❌ Internal server error while updating article");
+      console.error("Update error:", err)
+      showNotification("Error updating article", "error")
     }
   }
 
   return (
-    <div className="w-100 container my-2">
-      {!editStatus ? (
-        <div className="d-flex flex-column justify-content-between">
-          {/* Article Display View */}
-          <div className="mb-3 w-100 px-4 py-2 rounded-4 bg-secondary d-flex justify-content-between align-items-center">
-            <div className="d-flex flex-row gap-3 ">
-              <p className="display-6 text-white">{title}</p>
-              {
-                currentUser.firstName === state.articleObj.authorData.nameOfAuthor &&
-                <div>
-                  <button className="btn btn-lg text-warning" onClick={enableEdit}>
-                    <FaRegEdit />
-                  </button>
-                  {
-                    state.articleObj.isArticleActive ? (
-                      <button className="btn btn-lg text-warning" onClick={deleteArticle}><RiDeleteBin6Fill /></button>
-                    ) : (
-                      <button className="btn btn-lg text-warning" onClick={restoreArticle}><MdRestorePage /></button>
-                    )
-                  }
+    <div className="article-detail-container w-100">
+      <div className="container">
+        {notification && <div className={`notification ${notification.type}`}>{notification.message}</div>}
+
+        {!editStatus ? (
+          <div>
+            {/* Article Display View */}
+            <div className="article-header">
+              <div className="article-header-content">
+                <div className="article-title-section">
+                  <h1 className="article-main-title">{title}</h1>
+                  {currentUser.firstName === state.articleObj.authorData.nameOfAuthor && (
+                    <div className="article-actions">
+                      <button className="action-btn" onClick={enableEdit}>
+                        <FaRegEdit />
+                      </button>
+                      {state.articleObj.isArticleActive ? (
+                        <button className="action-btn" onClick={deleteArticle}>
+                          <RiDeleteBin6Fill />
+                        </button>
+                      ) : (
+                        <button className="action-btn" onClick={restoreArticle}>
+                          <MdRestorePage />
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
-              }
-            </div>
-            <div className='d-flex flex-column gap-1'>
-              <img src={state.articleObj.authorData.profileImageUrl} alt="" className='rounded-circle w-100 mx-auto' style={{ maxWidth: "40px", height: "40px" }} />
-              <p className='text-white'>
-                <span className='text-warning'>Author: </span>{state.articleObj.authorData.nameOfAuthor}
-              </p>
-            </div>
-          </div>
 
-          <div className='container w-100 px-4 py-4 rounded-4 bg-secondary'>
-            <p>{content}</p>
-          </div>
+                <div className="author-section">
+                  <img
+                    src={state.articleObj.authorData.profileImageUrl || "/placeholder.svg"}
+                    alt="Author"
+                    className="author-avatar-large"
+                  />
+                  <p className="author-info-text">
+                    <span className="author-label">Author: </span>
+                    {state.articleObj.authorData.nameOfAuthor}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div className='w-100 container my-2 rounded-4 bg-secondary'>
-            {
-              state.articleObj.comments.length === 0
-                ? <p className='text-center p-3'>No comments yet</p>
-                : state.articleObj.comments.map(commentObj => (
-                  <div key={commentObj._id}>
-                    <p>{commentObj?.nameOfUser}</p>
-                    <p>{commentObj.comment}</p>
+            <div className="article-content-section">
+              <p>{content}</p>
+            </div>
+
+            <div className="comments-section">
+              <h3 className="comments-title">Comments</h3>
+              {state.articleObj.comments.length === 0 ? (
+                <p className="no-comments">No comments yet. Be the first to share your thoughts!</p>
+              ) : (
+                state.articleObj.comments.map((commentObj) => (
+                  <div key={commentObj._id} className="comment-item">
+                    <p className="comment-author">{commentObj?.nameOfUser}</p>
+                    <p className="comment-text">{commentObj.comment}</p>
                   </div>
                 ))
-            }
-          </div>
-          {
-            currentUser.role=='user' && 
-              <div>
+              )}
+            </div>
+
+            {currentUser.role === "user" && (
+              <div className="comment-form">
                 <form onSubmit={addComment}>
                   <input
                     type="text"
-                    className={`form-control m-2`}
+                    className="comment-input"
                     id="comment"
-                    name='comment'
-                    
+                    name="comment"
+                    placeholder="Share your thoughts..."
                   />
-                  <button className="btn btn-success m-2 " type='submit'>Add Comment</button>
+                  <button className="submit-btn" type="submit">
+                    Add Comment
+                  </button>
                 </form>
               </div>
-          }
-        </div>        
-      ) : (
-        <div className='w-100 container my-2 rounded-4 bg-secondary'>
-          {/* Article Edit Form */}
-          <form className="article-form p-3" onSubmit={handleSubmit(onSubmit)}>
-            <div className="row">
-              <div className="col-md-6">
-                {/* Title */}
-                <div className="form-group mb-3">
-                  <label htmlFor="title">Title<span className="text-danger">*</span></label>
-                  <input
-                    type="text"
-                    className={`form-control ${errors.title ? "is-invalid" : ""}`}
-                    id="title"
-                    {...register("title", { required: "Title is required" })}
-                  />
-                  {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
+            )}
+          </div>
+        ) : (
+          <div className="edit-form">
+            {/* Article Edit Form */}
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="row">
+                <div className="col-md-6">
+                  {/* Title */}
+                  <div className="form-group">
+                    <label htmlFor="title" className="form-label">
+                      Title<span className="required-asterisk">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className={`form-input ${errors.title ? "is-invalid" : ""}`}
+                      id="title"
+                      {...register("title", { required: "Title is required" })}
+                    />
+                    {errors.title && <div className="error-feedback">{errors.title.message}</div>}
+                  </div>
+
+                  {/* Category */}
+                  <div className="form-group">
+                    <label htmlFor="category" className="form-label">
+                      Category<span className="required-asterisk">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className={`form-input ${errors.category ? "is-invalid" : ""}`}
+                      id="category"
+                      {...register("category", { required: "Category is required" })}
+                    />
+                    {errors.category && <div className="error-feedback">{errors.category.message}</div>}
+                  </div>
                 </div>
 
-                {/* Category */}
-                <div className="form-group mb-3">
-                  <label htmlFor="category">Category<span className="text-danger">*</span></label>
-                  <input
-                    type="text"
-                    className={`form-control ${errors.category ? "is-invalid" : ""}`}
-                    id="category"
-                    {...register("category", { required: "Category is required" })}
-                  />
-                  {errors.category && <div className="invalid-feedback">{errors.category.message}</div>}
+                {/* Content */}
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="content" className="form-label">
+                      Content<span className="required-asterisk">*</span>
+                    </label>
+                    <textarea
+                      className={`form-textarea ${errors.content ? "is-invalid" : ""}`}
+                      id="content"
+                      {...register("content", { required: "Content is required" })}
+                    ></textarea>
+                    {errors.content && <div className="error-feedback">{errors.content.message}</div>}
+                  </div>
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="col-md-6">
-                <div className="form-group mb-3">
-                  <label htmlFor="content">Content<span className="text-danger">*</span></label>
-                  <textarea
-                    rows="7"
-                    className={`form-control ${errors.content ? "is-invalid" : ""}`}
-                    id="content"
-                    {...register("content", { required: "Content is required" })}
-                  ></textarea>
-                  {errors.content && <div className="invalid-feedback">{errors.content.message}</div>}
-                </div>
-              </div>
-            </div>
-
-            <button className="btn btn-success mt-3 px-4 py-2" type="submit">
-              Update Article
-            </button>
-          </form>
-        </div>
-      )}
+              <button className="submit-btn" type="submit">
+                Update Article
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
     </div>
-  );
+  )
 }
 
-export default ArticleByID;
+export default ArticleByID
