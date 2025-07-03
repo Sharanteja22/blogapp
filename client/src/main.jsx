@@ -13,6 +13,8 @@ import PostArticle from './components/author/PostArticle.jsx'
 import Login from './components/common/Login.jsx';
 import Register from './components/common/Register.jsx';
 import UserContext from './contexts/userContext.jsx';
+import ArticlesByAuthor from './components/common/ArticlesByAuthor.jsx';
+import DeletedArticles from './components/common/DeletedArticles.jsx';
 const browserRouterObj=createBrowserRouter([
   {
     path:'/',
@@ -58,6 +60,12 @@ const browserRouterObj=createBrowserRouter([
            },{
             path:"",
             element:<Navigate to="articles"/>
+           },{
+            path:"author-articles",
+            element:<ArticlesByAuthor/>
+           },{
+            path:'deleted-articles',
+            element: <DeletedArticles/>
            }
         ]
       }

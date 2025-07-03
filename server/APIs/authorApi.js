@@ -31,6 +31,21 @@ authorApp.get('/unauthorized',(req,res)=>{
     res.status(401).send({message:"unauthorized please Login"});
 })
 
+//read only his articles
+
+authorApp.get('/articles/:authorName',requireAuth({signInUrl:'unauthorized'}),expressAsyncHandler(async(req,res)=>{
+    const authorName=req.params.authorName;
+    const allArticles=await Article.find({"authorData.nameOfAuthor":authorName ,isArticleActive:true});
+    res.status(200).send({message:"articles by author",payload:allArticles});
+}))
+
+//read deleted articles 
+authorApp.get('/deletedArticles/:authorName',requireAuth({signInUrl:'unauthorized'}),expressAsyncHandler(async(req,res)=>{
+    const authorName=req.params.authorName;
+    const allArticles=await Article.find({"authorData.nameOfAuthor":authorName ,isArticleActive:false});
+    res.status(200).send({message:"deleted articles by author",payload:allArticles});
+}))
+
 //edit an article
 authorApp.put("/article/:articleId",requireAuth({signInUrl:'unauthorized'}),expressAsyncHandler(async(req,res)=>{
     const articleId=req.params.articleId;

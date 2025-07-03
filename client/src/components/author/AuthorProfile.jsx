@@ -31,6 +31,16 @@ function AuthorProfile() {
                   Add New Article
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="author-articles">
+                  Published Articles
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="deleted-articles">
+                  Deleted Artciles Article
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
