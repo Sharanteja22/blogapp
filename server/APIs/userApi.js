@@ -10,10 +10,10 @@ require("dotenv").config()
 // Create a new user
 userApp.post("/user", expressAsyncHandler(createUser))
 
-// Add comment
+// Add comment - FIXED: Use relative path
 userApp.put(
   "/comment/:articleID",
-  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed: relative path
+  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
   expressAsyncHandler(async (req, res) => {
     const commentObj = req.body
     const modifiedArticle = await Article.findOneAndUpdate(

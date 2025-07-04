@@ -20,20 +20,19 @@ authorApp.post(
   }),
 )
 
-// Read all articles (active)
+// All routes with FIXED signInUrl
 authorApp.get(
   "/articles",
-  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed: relative path
+  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
   expressAsyncHandler(async (req, res) => {
     const articles = await Article.find({ isArticleActive: true })
     res.status(200).send({ message: "articles", payload: articles })
   }),
 )
 
-// Read only this author's articles
 authorApp.get(
   "/articles/:authorName",
-  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed: relative path
+  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
   expressAsyncHandler(async (req, res) => {
     const articles = await Article.find({
       "authorData.nameOfAuthor": req.params.authorName,
@@ -43,10 +42,9 @@ authorApp.get(
   }),
 )
 
-// Read deleted articles
 authorApp.get(
   "/deletedArticles/:authorName",
-  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed: relative path
+  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
   expressAsyncHandler(async (req, res) => {
     const articles = await Article.find({
       "authorData.nameOfAuthor": req.params.authorName,
@@ -56,10 +54,9 @@ authorApp.get(
   }),
 )
 
-// Edit an article
 authorApp.put(
   "/article/:articleId",
-  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed: relative path
+  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
   expressAsyncHandler(async (req, res) => {
     const updatedArticle = await Article.findOneAndUpdate(
       { articleId: req.params.articleId },
@@ -70,10 +67,9 @@ authorApp.put(
   }),
 )
 
-// Soft delete or restore article
 authorApp.put(
   "/articleDelete/:articleId",
-  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed: relative path
+  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
   expressAsyncHandler(async (req, res) => {
     const updatedArticle = await Article.findOneAndUpdate(
       { articleId: req.params.articleId },
