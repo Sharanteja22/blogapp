@@ -23,7 +23,7 @@ authorApp.post(
 // All routes with FIXED signInUrl
 authorApp.get(
   "/articles",
-  requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
+  // requireAuth({ signInUrl: "/unauthorized" }), // ✅ Fixed
   expressAsyncHandler(async (req, res) => {
     const articles = await Article.find({ isArticleActive: true })
     res.status(200).send({ message: "articles", payload: articles })

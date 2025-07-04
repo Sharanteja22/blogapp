@@ -4,6 +4,7 @@ import { useUser } from "@clerk/clerk-react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import "../styles/Home.css"
+import Articles from "./Articles"
 
 function Home() {
   const { currentUser, setCurrentUser } = useContext(userContextObj)
@@ -118,15 +119,18 @@ function Home() {
 
   return (
     <div className="w-100 d-flex justify-content-center align-items-center">
-      <div className="w-100" style={{ maxWidth: "70%" }}>
-        <div className="container home-container">
-          {!isSignedIn && (
-            <div className="welcome-section">
-              <p className="signin-message">Please sign in to continue and explore our platform.</p>
-            </div>
+       {!isSignedIn && (
+            // <div className="welcome-section">
+            //   {/* <p className="signin-message">Please sign in to continue and explore our platform.</p> */}
+
+            // </div>
+            <div className="w-100"><Articles/></div>
           )}
 
+
           {isSignedIn && (
+      <div className="w-100" style={{ maxWidth: "70%" }}>
+        <div className="container home-container">
             <>
               <div className="welcome-section">
                 <p className="display-5 welcome-title">Welcome, {user.fullName}!</p>
@@ -166,9 +170,9 @@ function Home() {
                 )}
               </div>
             </>
-          )}
         </div>
       </div>
+          )}
     </div>
   )
 }
