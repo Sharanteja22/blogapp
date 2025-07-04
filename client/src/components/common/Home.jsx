@@ -71,9 +71,9 @@ function Home() {
     try {
       let res = null
       if (role === "author") {
-        res = await axios.post("http://localhost:3000/author-api/user", updatedUser)
+        res = await axios.post("/author-api/user", updatedUser)
       } else if (role === "user") {
-        res = await axios.post("http://localhost:3000/user-api/user", updatedUser)
+        res = await axios.post("/user-api/user", updatedUser)
       } else {
         setError("Admin role handling not implemented.")
         setLoading(false)
