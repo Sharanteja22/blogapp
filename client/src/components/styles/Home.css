@@ -1,4 +1,4 @@
-/* Home Component Styles - Dark Theme */
+/* Home Component Styles - Dark Theme with Enhanced Features */
 
 /* Container and Layout */
 .home-container {
@@ -38,7 +38,7 @@
   font-weight: 700;
   margin-bottom: 1rem;
   position: relative;
-  color: #e2e8f0; /* fallback for browsers that don't support background-clip */
+  color: #e2e8f0;
 }
 
 .welcome-title::after {
@@ -53,6 +53,13 @@
   border-radius: 2px;
 }
 
+.welcome-subtitle {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  font-weight: 400;
+}
+
 .signin-message {
   font-size: 1.2rem;
   color: #cbd5e1;
@@ -63,6 +70,25 @@
   border: 1px solid rgba(79, 70, 229, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3em;
+}
+
+.text-primary {
+  color: #4f46e5 !important;
 }
 
 /* Role Selection Container */
@@ -180,6 +206,23 @@
   animation: spin 1s linear infinite;
 }
 
+/* Loading Message */
+.loading-message {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(79, 70, 229, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  margin-top: 1rem;
+}
+
+.loading-message p {
+  color: #60a5fa;
+  font-weight: 500;
+  margin: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
 /* Error Message */
 .error-message {
   background: linear-gradient(135deg, #450a0a, #7f1d1d);
@@ -231,6 +274,16 @@
   }
 }
 
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 /* Role Icons */
 .role-option::after {
   position: absolute;
@@ -259,28 +312,6 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
-  .home-container {
-    max-width: 90%;
-    margin: 0 auto;
-  }
-}
-
-@media (max-width: 992px) {
-  .home-container {
-    padding: 2.5rem 1.5rem;
-  }
-
-  .role-options {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.25rem;
-  }
-
-  .welcome-title {
-    font-size: 2.5rem;
-  }
-}
-
 @media (max-width: 768px) {
   .home-container {
     padding: 2rem 1rem;
@@ -313,39 +344,6 @@
   }
 }
 
-@media (max-width: 576px) {
-  .home-container {
-    padding: 1.5rem 0.75rem;
-    margin: 0.5rem;
-  }
-
-  .welcome-title {
-    font-size: 1.75rem;
-  }
-
-  .signin-message {
-    font-size: 0.95rem;
-    padding: 1.25rem;
-  }
-
-  .role-option {
-    padding: 1.25rem 0.75rem;
-  }
-
-  .role-option .form-check-input {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  .role-option .form-check-label {
-    font-size: 1rem;
-  }
-
-  .role-options {
-    gap: 0.75rem;
-  }
-}
-
 @media (max-width: 480px) {
   .home-container {
     border-radius: 12px;
@@ -364,32 +362,6 @@
   .role-option {
     padding: 1rem 0.5rem;
   }
-
-  .role-option::after {
-    font-size: 1.25rem;
-    top: 0.75rem;
-    right: 0.75rem;
-  }
-}
-
-/* Extra small devices */
-@media (max-width: 360px) {
-  .home-container {
-    margin: 0.25rem;
-    padding: 1rem 0.5rem;
-  }
-
-  .welcome-title {
-    font-size: 1.25rem;
-  }
-
-  .role-options {
-    gap: 0.5rem;
-  }
-
-  .role-option {
-    padding: 0.75rem 0.5rem;
-  }
 }
 
 /* Focus States for Accessibility */
@@ -398,18 +370,13 @@
   outline-offset: 2px;
 }
 
-/* Hover Effects for Better UX */
+/* Hover Effects */
 .role-option:not(.loading):hover .form-check-label {
   color: #60a5fa;
   transform: scale(1.05);
 }
 
-.role-option:not(.loading):hover .form-check-input {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
-}
-
-/* Success State Animation */
+/* Success Animation */
 .role-option:has(input:checked) {
   animation: successPulse 0.6s ease-out;
 }
@@ -424,46 +391,4 @@
   100% {
     transform: scale(1.02) translateY(-4px);
   }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .role-option {
-    border-width: 3px;
-  }
-
-  .welcome-title {
-    color: #ffffff;
-  }
-
-  .signin-message {
-    color: #ffffff;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Dark scrollbar for webkit browsers */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #1e293b;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #4f46e5;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #6366f1;
 }
