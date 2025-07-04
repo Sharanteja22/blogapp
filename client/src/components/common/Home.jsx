@@ -137,7 +137,7 @@ function Home() {
 
               <div className="role-selection-container">
                 <div className="role-options">
-                  {["admin", "author", "user"].map((role) => (
+                  {[ "author", "user"].map((role) => (
                     <div className={`role-option ${loading ? "loading" : ""}`} key={role} data-role={role}>
                       <input
                         className="form-check-input"
