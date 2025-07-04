@@ -13,7 +13,7 @@ userApp.post('/user', expressAsyncHandler(createUser));
 // Add comment
 userApp.put(
   '/comment/:articleID',
-  requireAuth({ signInUrl: '/unauthorized' }), // ✅ fixed path
+  requireAuth({ signInUrl: 'https://blogapp-sharanteja.onrender.com/unauthorized' }),
   expressAsyncHandler(async (req, res) => {
     const commentObj = req.body;
     const modifiedArticle = await Article.findOneAndUpdate(
