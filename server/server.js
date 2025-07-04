@@ -11,56 +11,24 @@ const port = process.env.PORT || 4000
 app.use(cors())
 app.use(express.json())
 
-// Debug function to safely register routes
-function safeRegisterRoute(routePath, routeFile) {
-  try {
-    console.log(`🔍 Attempting to register: ${routePath}`)
-    const routeHandler = require(routeFile)
-    app.use(routePath, routeHandler)
-    console.log(`✅ Successfully registered: ${routePath}`)
-    return true
-  } catch (error) {
-    console.error(`❌ Failed to register ${routePath}:`, error.message)
-    console.error(`Stack trace:`, error.stack)
-    return false
-  }
-}
-
-// Connect to MongoDB
+// Connect to MongoDB first, then set up routes
 mongoose
   .connect(process.env.DB_URL)
   .then(() => {
     console.log("✅ MongoDB connected")
 
-    // Register routes one by one to identify the problematic one
-    console.log("\n🚀 Registering API routes...")
+    // API Routes
+    app.use("/user-api", require("./APIs/userApi"))
+    app.use("/author-api", require("./APIs/authorApi"))
+    app.use("/admin-api", require("./APIs/adminApi"))
 
-    const routes = [
-      { path: "/user-api", file: "./APIs/userApi" },
-      { path: "/author-api", file: "./APIs/authorApi" },
-      { path: "/admin-api", file: "./APIs/adminApi" },
-    ]
-
-    let allRoutesRegistered = true
-
-    for (const route of routes) {
-      const success = safeRegisterRoute(route.path, route.file)
-      if (!success) {
-        allRoutesRegistered = false
-        console.log(`⚠️  Skipping ${route.path} due to error`)
-      }
-    }
-
-    if (!allRoutesRegistered) {
-      console.log("\n⚠️  Some routes failed to register. Server will continue without them.")
-    }
-
-    // Serve frontend build files
+    // Serve static files
     const frontendPath = path.join(__dirname, "../client/dist")
     app.use(express.static(frontendPath))
 
-    // SPA Fallback
-    app.get("*", (req, res) => {
+    // ✅ FIXED: Use a more specific pattern instead of '*'
+    // Handle client-side routing for React/Vue/Angular SPAs
+    app.get(/^(?!\/api).*/, (req, res) => {
       res.sendFile(path.join(frontendPath, "index.html"))
     })
 
@@ -73,7 +41,7 @@ mongoose
     console.error("❌ Error in database connection:", err)
   })
 
-// Global error handler
+// Error handler
 app.use((err, req, res, next) => {
   console.error("Global error:", err.message)
   res.status(500).send({ message: err.message })
