@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@clerk/clerk-react"
 import "../styles/Articles.css"
 import { useContext } from "react"
-import { userContextObj } from "../../contexts/userContext"
+import { userContextObj } from '../../contexts/UserContext'
 
 function DeletedArticles() {
   const [articles, setArticles] = useState([])

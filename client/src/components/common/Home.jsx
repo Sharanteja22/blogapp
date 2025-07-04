@@ -1,7 +1,5 @@
-"use client"
-
 import { useContext, useEffect, useState } from "react"
-import { userContextObj } from "../../contexts/userContext"
+import { userContextObj } from '../../contexts/UserContext'
 import { useUser } from "@clerk/clerk-react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"

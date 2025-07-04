@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useContext } from "react"
 import { useForm } from "react-hook-form"
-import { userContextObj } from "../../contexts/userContext"
+import {userContextObj} from '../../contexts/UserContext'
 import { useNavigate } from "react-router-dom"
 import "./PostArticle.css"
 
