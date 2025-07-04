@@ -237,7 +237,7 @@ function ArticleByID() {
               )}
             </div>
 
-            {currentUser.role === "user" && (
+            {currentUser.firstName != state.articleObj.authorData.nameOfAuthor && (
               <div className="comment-form">
                 <form onSubmit={addComment}>
                   <input
