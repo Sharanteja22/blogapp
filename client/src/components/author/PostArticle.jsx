@@ -42,7 +42,7 @@ function PostArticle() {
     formData.comments = []
 
     try {
-      const res = await axios.post("http://localhost:3000/author-api/article", formData)
+      const res = await axios.post("/author-api/article", formData)
       console.log(res)
       reset()
       if (res.status === 201) {

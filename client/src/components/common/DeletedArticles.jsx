@@ -23,7 +23,7 @@ function DeletedArticles() {
       setLoading(true)
       const token = await getToken()
       console.log(currentUser.firstName)
-      const res = await axios.get(`http://localhost:3000/author-api/deletedArticles/${currentUser.firstName}`, {
+      const res = await axios.get(`/author-api/deletedArticles/${currentUser.firstName}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

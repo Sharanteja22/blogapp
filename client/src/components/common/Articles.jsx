@@ -19,7 +19,7 @@ function Articles() {
     try {
       setLoading(true)
       const token = await getToken()
-      const res = await axios.get("http://localhost:3000/author-api/articles", {
+      const res = await axios.get("/author-api/articles", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

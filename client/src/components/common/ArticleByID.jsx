@@ -30,7 +30,7 @@ function ArticleByID() {
       state.articleObj.isArticleActive = false
 
       const res = await axios.put(
-        `http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,
+        `/author-api/articleDelete/${state.articleObj.articleId}`,
         state.articleObj,
         {
           headers: {
@@ -66,7 +66,7 @@ function ArticleByID() {
       e.target.reset()
       commentObj.nameOfUser = currentUser.firstName
 
-      const res = await axios.put(`http://localhost:3000/user-api/comment/${state.articleObj.articleId}`, commentObj, {
+      const res = await axios.put(`/user-api/comment/${state.articleObj.articleId}`, commentObj, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -91,7 +91,7 @@ function ArticleByID() {
       state.articleObj.isArticleActive = true
 
       const res = await axios.put(
-        `http://localhost:3000/author-api/articleDelete/${state.articleObj.articleId}`,
+        `/author-api/articleDelete/${state.articleObj.articleId}`,
         state.articleObj,
         {
           headers: {
@@ -151,7 +151,7 @@ function ArticleByID() {
         currentDate.toLocaleTimeString("en-US", { hour12: true })
 
       const res = await axios.put(
-        `http://localhost:3000/author-api/article/${state.articleObj.articleId}`,
+        `/author-api/article/${state.articleObj.articleId}`,
         modifiedData,
         {
           headers: {
