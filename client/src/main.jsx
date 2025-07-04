@@ -12,7 +12,7 @@ import ArticleByID from './components/common/ArticleByID.jsx'
 import PostArticle from './components/author/PostArticle.jsx'
 import Login from './components/common/Login.jsx';
 import Register from './components/common/Register.jsx';
-import UserContext from './contexts/userContext.jsx';
+import UserContext from './contexts/UserContext.jsx';
 import ArticlesByAuthor from './components/common/ArticlesByAuthor.jsx';
 import DeletedArticles from './components/common/DeletedArticles.jsx';
 const browserRouterObj=createBrowserRouter([
