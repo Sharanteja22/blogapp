@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom"
-
+import '../styles/common.css'
 function AuthorProfile() {
   return (
     <div className="w-100 d-flex flex-column" >
