@@ -1,5 +1,3 @@
-"use client"
-
 import axios from "axios"
 import { useContext } from "react"
 import { useForm } from "react-hook-form"

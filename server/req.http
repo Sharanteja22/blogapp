@@ -1,0 +1,97 @@
+GET http://localhost:3000/user-api/users
+
+###
+
+###create author
+POST http://localhost:3000/author-api/user
+Content-Type: application/json
+
+{
+    "role": "author",
+    "firstName": "author1",
+    "lastName":"a1",
+    "email": "author1@gmail.com",
+    "profileImageUrl": "author image",
+    "isActive": true
+}
+
+###create user
+POST http://localhost:3000/user-api/user
+Content-Type: application/json
+
+{
+    "role": "author",
+    "firstName": "user1",
+    "lastName":"u1",
+    "email": "user1@gmail.com",
+    "profileImageUrl": "user1 image",
+    "isActive": true
+}
+
+
+###create article
+POST http://localhost:3000/author-api/article
+Content-Type: application/json
+
+{
+    "authorData":{
+        "nameOfAuthor":"author1",
+        "email":"author1@gmail.com",
+        "profileImageUrl":"author1 image"
+    },
+    "articleId":"{{$timestamp}}",
+    "title":"JavaScrit",
+    "category":"test",
+    "content":"Js is a progrmming language and can be used for both server side and client side.Js is a progrmming language and can be used for both server side and client side.Js is a progrmming language and can be used for both server side and client side.",
+    "dateOfCreation":"{{$datetime iso8601}}",
+    "dateOfModification":"${{$datetime iso8601}}",
+    "comments":[]
+}
+
+
+### read all articles 
+GET http://localhost:3000/author-api/articles
+
+### read author articles
+GET http://localhost:3000/author-api/articles/CHARAGONDLA
+
+### deleted articles by author
+GET http://localhost:3000/author-api/deletedArticles/CHARAGONDLA
+
+###edit an article
+PUT http://localhost:3000/author-api/article/1751342740
+Content-Type: application/json
+
+{
+    "_id":"686358313b9b06e9713e86a8",
+    "authorData":{
+        "nameOfAuthor":"author1",
+        "email":"author1@gmail.com",
+        "profileImageUrl":"author1 image"
+    },
+    "title":"JavaScrit",
+    "category":"program",
+    "content":"Js is a progrmming language and can be used for both server side and client side.Js is a progrmming language and can be used for both server side and client side.Js is a progrmming language and can be used for both server side and client side.",
+    "dateOfModification":"${{$datetime iso8601}}",
+    "isArticleActive":true,
+    "comments":[]
+}
+
+### soft delete
+PUT http://localhost:3000/author-api/articleDelete/1751342740
+Content-Type: application/json
+
+{
+    "isArticleActive":false
+}
+
+
+### adding a comment
+PUT http://localhost:3000/user-api/comment/1751391957880
+Content-Type: application/json
+
+{
+    "nameOfUser":"user1",
+    "comment":"Great Content,Sir!!"
+}
+
